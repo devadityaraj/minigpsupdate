@@ -31,32 +31,10 @@
         .error {
             color: #e76f51;
         }
-        #login-form {
-            margin: 20px;
-        }
-        input[type="email"], input[type="password"] {
-            padding: 10px;
-            margin: 10px 0;
-            width: 250px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #2a9d8f;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
     <h1>Location Tracker</h1>
-    <div id="login-form">
-        <h2>Sign In</h2>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="signIn()">Sign In</button>
-        <div id="auth-status"></div>
-    </div>
     <div id="status" class="loading">Getting your location...</div>
     <div id="location"></div>
 
@@ -66,7 +44,7 @@
     <script>
         // Firebase Configuration
         const firebaseConfig = {
-    apiKey: "AIzaSyBZSz_JcqegYjLKPUncmV5Zzi8hLEnJ1Wg",
+               apiKey: "AIzaSyBZSz_JcqegYjLKPUncmV5Zzi8hLEnJ1Wg",
     authDomain: "miniproject-5e040.firebaseapp.com",
     databaseURL: "https://miniproject-5e040-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "miniproject-5e040",
@@ -80,25 +58,23 @@
         const auth = firebase.auth();
         const database = firebase.database(app);
 
-        // Function for Sign In
-        function signIn() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            auth.signInWithEmailAndPassword("adityaraj94505@gmail.com", "aditya123")
-                .then((userCredential) => {
-                    document.getElementById('auth-status').textContent = 'Logged in successfully!';
-                    document.getElementById('auth-status').style.color = '#2a9d8f';
-                    document.getElementById('login-form').style.display = 'none';
-                    updateLocation();
-                })
-                .catch((error) => {
-                    document.getElementById('auth-status').textContent = 'Error: ' + error.message;
-                    document.getElementById('auth-status').style.color = '#e76f51';
-                });
-        }
+        // Your Email and Password
+        const email = "adityaraj94505@gmail.com"; // Replace with your email
+        const password = "aditya123"; // Replace with your password
+
+        // Sign in using email/password
+        auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
+                document.getElementById('status').textContent = 'Logged in successfully!';
+                getLocation();  // Start location tracking after login
+            })
+            .catch((error) => {
+                document.getElementById('status').textContent = 'Error: ' + error.message;
+                document.getElementById('status').classList.add('error');
+            });
 
         // Function to get and update location
-        function updateLocation() {
+        function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition((position) => {
                     const lat = position.coords.latitude;
@@ -127,11 +103,10 @@
                 document.getElementById('status').classList.add('error');
             }
         }
-        setInterval(() => {
-            if (auth.currentUser) {
-                updateLocation();
-            }
-        }, 5000);
+
+        // Update location every 5 seconds
+        setInterval(getLocation, 5000);
     </script>
 </body>
 </html>
+              
