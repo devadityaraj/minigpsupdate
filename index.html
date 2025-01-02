@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            background-color: #f4f4f9;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        #status {
+            font-size: 1.2em;
+            color: #555;
+            margin-top: 20px;
+        }
+        #location {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2a9d8f;
+        }
+        .loading {
+            color: #e9c46a;
+        }
+        .error {
+            color: #e76f51;
+        }
+        #login-form {
+            margin: 20px;
+        }
+        input[type="email"], input[type="password"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 250px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #2a9d8f;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Location Tracker</h1>
+    <div id="login-form">
+        <h2>Sign In</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="signIn()">Sign In</button>
+        <div id="auth-status"></div>
+    </div>
+    <div id="status" class="loading">Getting your location...</div>
+    <div id="location"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+    apiKey: "AIzaSyBZSz_JcqegYjLKPUncmV5Zzi8hLEnJ1Wg",
+    authDomain: "miniproject-5e040.firebaseapp.com",
+    databaseURL: "https://miniproject-5e040-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "miniproject-5e040",
+    storageBucket: "miniproject-5e040.appspot.com",
+    messagingSenderId: "901333926053",
+    appId: "1:901333926053:web:2929b20cb0b7ed6031cd4c"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database(app);
+
+        // Function for Sign In
+        function signIn() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            auth.signInWithEmailAndPassword("adityaraj94505@gmail.com", "aditya123")
+                .then((userCredential) => {
+                    document.getElementById('auth-status').textContent = 'Logged in successfully!';
+                    document.getElementById('auth-status').style.color = '#2a9d8f';
+                    document.getElementById('login-form').style.display = 'none';
+                    updateLocation();
+                })
+                .catch((error) => {
+                    document.getElementById('auth-status').textContent = 'Error: ' + error.message;
+                    document.getElementById('auth-status').style.color = '#e76f51';
+                });
+        }
+
+        // Function to get and update location
+        function updateLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    // Update location to Firebase
+                    database.ref('location').set({
+                        latitude: lat,
+                        longitude: lon,
+                        timestamp: Date.now()
+                    });
+
+                    // Update UI
+                    document.getElementById('status').textContent = 'Location updated.';
+                    document.getElementById('location').textContent = 'Latitude: ' + lat + ', Longitude: ' + lon;
+                }, (error) => {
+                    document.getElementById('status').textContent = 'Error getting location: ' + error.message;
+                    document.getElementById('status').classList.add('error');
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                });
+            } else {
+                document.getElementById('status').textContent = 'Geolocation not supported by this browser.';
+                document.getElementById('status').classList.add('error');
+            }
+        }
+        setInterval(() => {
+            if (auth.currentUser) {
+                updateLocation();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
