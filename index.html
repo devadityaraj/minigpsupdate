@@ -38,25 +38,27 @@
     <div id="status" class="loading">Getting your location...</div>
     <div id="location"></div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <!-- Firebase SDK (non-module version) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <script>
         // Firebase Configuration
         const firebaseConfig = {
-               apiKey: "AIzaSyBZSz_JcqegYjLKPUncmV5Zzi8hLEnJ1Wg",
-    authDomain: "miniproject-5e040.firebaseapp.com",
-    databaseURL: "https://miniproject-5e040-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "miniproject-5e040",
-    storageBucket: "miniproject-5e040.appspot.com",
-    messagingSenderId: "901333926053",
-    appId: "1:901333926053:web:2929b20cb0b7ed6031cd4c"
+            apiKey: "AIzaSyBZSz_JcqegYjLKPUncmV5Zzi8hLEnJ1Wg",
+            authDomain: "miniproject-5e040.firebaseapp.com",
+            databaseURL: "https://miniproject-5e040-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "miniproject-5e040",
+            storageBucket: "miniproject-5e040.appspot.com",
+            messagingSenderId: "901333926053",
+            appId: "1:901333926053:web:2929b20cb0b7ed6031cd4c"
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const database = firebase.database(app);
+        const database = firebase.database();
 
         // Your Email and Password
         const email = "adityaraj94505@gmail.com"; // Replace with your email
@@ -109,4 +111,3 @@
     </script>
 </body>
 </html>
-              
