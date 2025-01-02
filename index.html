@@ -83,18 +83,19 @@
                     const lon = position.coords.longitude;
 
                     // Update location to Firebase
-                    database.ref('location').set({
+                    database.ref('gps').set({
                         latitude: lat,
                         longitude: lon,
-                        timestamp: Date.now()
                     });
 
                     // Update UI
                     document.getElementById('status').textContent = 'Location updated.';
                     document.getElementById('location').textContent = 'Latitude: ' + lat + ', Longitude: ' + lon;
+                    console.log("Updated");
                 }, (error) => {
                     document.getElementById('status').textContent = 'Error getting location: ' + error.message;
                     document.getElementById('status').classList.add('error');
+                    console.log("Failed to Update");
                 }, {
                     enableHighAccuracy: true,
                     timeout: 10000,
